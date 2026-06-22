@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ryanna's Intern Guide</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐶</text></svg>">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes unlockFade {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.04); }
+      100% { opacity: 0; transform: scale(1.08); }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-8px); }
+      40% { transform: translateX(8px); }
+      60% { transform: translateX(-6px); }
+      80% { transform: translateX(6px); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    #lock-screen {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, #4a1f80 0%, #632ca6 50%, #8b5cf6 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
+    }
+
+    #lock-screen .card {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 20px;
+      padding: 48px 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: fadeInUp 0.6s ease forwards;
+      width: 320px;
+    }
+
+    #lock-screen .emoji {
+      font-size: 3rem;
+      margin-bottom: 16px;
+      animation: float 3s ease-in-out infinite;
+      display: block;
+    }
+
+    #lock-screen h2 {
+      color: white;
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+
+    #lock-screen p {
+      color: rgba(255,255,255,0.7);
+      font-size: 0.88rem;
+      margin-bottom: 28px;
+      text-align: center;
+    }
+
+    #lock-screen input {
+      padding: 13px 16px;
+      border-radius: 10px;
+      border: 2px solid rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.15);
+      color: white;
+      font-size: 1rem;
+      width: 100%;
+      margin-bottom: 12px;
+      text-align: center;
+      outline: none;
+      transition: border-color 0.2s;
+      letter-spacing: 0.05em;
+    }
+
+    #lock-screen input::placeholder { color: rgba(255,255,255,0.45); }
+    #lock-screen input:focus { border-color: rgba(255,255,255,0.7); }
+
+    #lock-screen button {
+      background: white;
+      color: #632ca6;
+      border: none;
+      padding: 13px 0;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    }
+
+    #lock-screen button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    }
+
+    #lock-screen button:active { transform: translateY(0); }
+
+    #lock-screen .error {
+      color: #ffcdd2;
+      font-size: 0.82rem;
+      margin-top: 12px;
+      display: none;
+      text-align: center;
+    }
+
+    #lock-screen.unlocking {
+      animation: unlockFade 0.5s ease forwards;
+    }
+
+    #lock-screen .card.shake {
+      animation: shake 0.4s ease;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f9f9f9;
+      color: #1a1a1a;
+      line-height: 1.7;
+    }
+
+    header {
+      background: #632ca6;
+      color: white;
+      padding: 48px 32px 36px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      font-size: 0.95rem;
+      opacity: 0.85;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      background: #4a1f80;
+      padding: 12px 32px;
+    }
+
+    nav button {
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 500;
+      padding: 8px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.15s, background 0.15s;
+    }
+
+    nav button:hover { opacity: 1; }
+    nav button.active { background: rgba(255,255,255,0.15); opacity: 1; }
+
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 48px 24px;
+    }
+
+    section {
+      margin-bottom: 56px;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #632ca6;
+      margin-bottom: 24px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #e8e0f5;
+    }
+
+    /* Letter styles */
+    .letter {
+      background: white;
+      border-radius: 8px;
+      padding: 36px 40px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      font-size: 0.95rem;
+      color: #333;
+    }
+
+    .letter h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #632ca6;
+      margin-top: 28px;
+      margin-bottom: 8px;
+    }
+
+    .letter h3:first-child {
+      margin-top: 0;
+    }
+
+    .letter p {
+      margin-bottom: 12px;
+    }
+
+    .letter ol {
+      padding-left: 20px;
+      margin-bottom: 12px;
+    }
+
+    .letter ol li {
+      margin-bottom: 4px;
+    }
+
+    .letter .highlight {
+      font-weight: 700;
+      background: #fff3cd;
+      padding: 1px 3px;
+      border-radius: 3px;
+    }
+
+    .letter .italic {
+      font-style: italic;
+    }
+
+    .letter .sign-off {
+      margin-top: 28px;
+    }
+
+    .doc-link-wrap {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 12px;
+    }
+
+    .doc-link {
+      font-size: 0.8rem;
+      color: #632ca6;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      opacity: 0.75;
+      transition: opacity 0.15s;
+    }
+
+    .doc-link:hover { opacity: 1; }
+
+    /* Terms */
+    .search-wrap {
+      margin-bottom: 24px;
+    }
+
+    #search {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid #d0c4ee;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.15s;
+      background: white;
+    }
+
+    #search:focus { border-color: #632ca6; }
+
+    .category-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #888;
+      margin: 32px 0 12px;
+    }
+
+    .category-label:first-of-type {
+      margin-top: 0;
+    }
+
+    .term {
+      background: white;
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin-bottom: 10px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      transition: box-shadow 0.15s;
+    }
+
+    .term:hover { box-shadow: 0 2px 10px rgba(99,44,166,0.12); }
+
+    .term-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .term-abbr {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #632ca6;
+    }
+
+    .term-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #632ca6;
+    }
+
+    .term-abbr ~ .term-name {
+      font-size: 0.78rem;
+      font-weight: 500;
+      background: #f3eeff;
+      color: #632ca6;
+      padding: 2px 9px;
+      border-radius: 20px;
+    }
+
+    .term-body {
+      font-size: 0.92rem;
+      color: #444;
+    }
+
+    .term-body ul {
+      margin-top: 8px;
+      padding-left: 18px;
+    }
+
+    .term-body ul li {
+      margin-bottom: 4px;
+    }
+
+    .term-body .sub {
+      margin-top: 10px;
+      padding: 10px 14px;
+      background: #f9f9f9;
+      border-radius: 6px;
+      font-size: 0.88rem;
+    }
+
+    .hidden { display: none; }
+
+    .category-section.hidden { display: none; }
+
+    footer {
+      text-align: center;
+      padding: 32px;
+      font-size: 0.85rem;
+      color: #999;
+      border-top: 1px solid #eee;
+    }
+
+    footer a { color: #632ca6; text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<div id="lock-screen">
+  <div class="card" id="lock-card">
+    <span class="emoji">🐶</span>
+    <h2>Ryanna's Intern Guide</h2>
+    <p>Enter the password to continue</p>
+    <input type="password" id="pw-input" placeholder="Password" onkeydown="if(event.key==='Enter') checkPassword()" />
+    <button onclick="checkPassword()">Unlock</button>
+    <div class="error" id="pw-error">Incorrect password. Try again.</div>
+  </div>
+</div>
+
+<header>
+  <h1>Ryanna's Intern Guide</h1>
+  <p>Platform PM · API Platforms · Datadog · As of June 2026</p>
+</header>
+
+<nav>
+  <button class="active" onclick="showTab('letter')">Letter</button>
+  <button onclick="showTab('terms')">Terms</button>
+  <button onclick="showTab('contact')">Contact</button>
+</nav>
+
+<main>
+
+  <!-- LETTER -->
+  <section id="letter">
+    <h2>Dear Future Intern</h2>
+    <div class="letter">
+
+      <p style="font-size:0.85rem; color:#999; margin-bottom: 28px;"><em>As of June 2026. This is actually all manually written by me (which is also why the grammar is a little wacky 😂). Here are just some kind words and explanations that I would have found useful in the beginning.</em></p>
+
+      <h3>Who is my team?</h3>
+      <p>You are not a traditional PM with a team of engineers and designers that you consistently sit with and work with.</p>
+      <p>There are four engineering teams:</p>
+      <ol>
+        <li>API Reliability</li>
+        <li>API Load Testing</li>
+        <li>API Web Frameworks</li>
+        <li>API Edge Services (APES)</li>
+      </ol>
+      <p>SeGe is a PM who is mapped to ALL four of those eng teams, hence his role name as PM for API Platforms (you can also imagine how busy he is). These eng teams used to operate without any PM support because they work on internal products (things that don't exactly have a UI, stuff like frameworks, building stuff in the backend). They started adding PM support because as engineers they don't enjoy the "figuring out what exactly clients want", the people management, the negotiations, and the "keeping tabs on other teams" side of things as much. Also you don't have a designer lol, so if you have a UI for your product, I hope you enjoy design. But honestly, Datadog isn't super design heavy so it's pretty simple (visually).</p>
+
+      <h3>My project</h3>
+      <p>For my project (API Pricing Project), I am working closely with API Edge Services, so that is sorta like "my product's engineering team". You might be working closely with a different eng team if your product falls under them for development.</p>
+
+      <h3>I'm so confused?? (ask questions, write stuff down)</h3>
+      <p>Don't worry if you are confused at the beginning of your internship. We all were. It kinda feels like you are drinking water out of a fire hose. Just keep on keeping on. Try to write down important things. Write down your questions so you don't forget them. If you don't understand a term or concept in a meeting, you can ask right away if it's appropriate. If you don't ask in the moment, make sure to write it down so you can search it up later and/or ask someone about it. Your brain will be so overwhelmed, if you say "oh let me remember to figure that out later", you will forget. Also record meetings with google meet or zoom. You can just start the zoom notes function on your laptop when you do an in person meeting. GMeet is better at transcription.</p>
+      <p><span class="highlight">Find a nice engineer that you can ask really dumb questions to.</span> Ask as many questions as you can early on. The earlier you are in your job, the more acceptable it is to ask really basic questions. Don't worry, I am literally on the API platforms team and I asked "what is an API" 🥹</p>
+      <p>Talk to the engineers. It might seem like your team is just you, Sege, and Daniel. I didn't even know who to talk to otherwise. Do branch out and talk to the engineers as early as possible.</p>
+
+      <h3>First month free time</h3>
+      <p>You will have a lot of free time in the first month.</p>
+      <p><span class="italic"><span style="font-weight:700;">If you are the type to dilly dally</span>:</span> do NOT waste your first month. It's easy to coast in your first month, because no one expects much from you yet. Use that time to read product briefs, coffee chat, do some personal learning. (refer to the product briefs part below)</p>
+      <p><span class="italic"><span style="font-weight:700;">If you are the type who usually takes initiative and gets stressed cuz you feel like you are not doing enough work</span>:</span> <span style="font-weight:700;">don't worry. Chill out.</span> It's okay not to have a ton of outputs in the first month. It's okay to still be confused in the first month. I know its hard to "take initiative" when you don't even understand the initiative 😂. Keep chatting and reading and you will naturally get used to it.</p>
+
+      <h3>Actually contributing</h3>
+      <p>You will feel like you can't contribute because you don't even know what you don't know. Datadog is complicated, but keep trying and slowly things will start to click. Also you will never know 100% of everything, so you need to be able to move forward with whatever you got. Don't wait to understand everything before taking action. <span class="highlight">Perfection is the enemy of good.</span> Do not wait for your output to be perfect before sharing it with others. Get their feedback and direction early. Everyone is really nice.</p>
+
+      <h3>Feedback</h3>
+      <p>Do not take it personally when people dig into your brief/idea/design. They are just doing their job. It's a good thing, not an attack. If you really take everything personally, you may have a hard time being in a PM role 😅. If you didn't think through something, just say, "that is a good point, I didn't think through that. Let me clarify that and get back to you asap".</p>
+
+      <h3>Product Briefs</h3>
+      <p>Read up on Product Briefs earlier. I wish I read more of these during my first month when I had time. Because now I need to write one and now I don't have as much free time to read through a lot of them in a relaxed manner. Ask your mentor, manager, and/or buddy to send you some good examples. You will for sure be writing a brief so it's better to get familiar with them early. Also every PM and company write them differently, so take the time to develop your own style. (and you do that by exploring other people's styles)</p>
+
+      <h3>Contact</h3>
+      <p>If I am still at the company, feel free to reach out whenever on Slack. If I'm not, you can find me at my public instagram <a href="https://instagram.com/ryanna.adventures" target="_blank" style="color:#632ca6;">@ryanna.adventures</a></p>
+      <p>And in the end, remember there's so much more to life than just work!</p>
+      <p class="sign-off">Good luck my fellow intern! You got this! I believe in you!<br /><br />Ryanna Luo :)</p>
+
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <h2>Contact</h2>
+    <div class="letter">
+      <p>If I am still at the company, feel free to reach out whenever on Slack. If I'm not, you can find me at my public instagram <a href="https://instagram.com/ryanna.adventures" target="_blank" style="color:#632ca6;">@ryanna.adventures</a></p>
+      <p style="margin-top:12px;">And in the end, remember there's so much more to life than just work!</p>
+      <p class="sign-off">Good luck my fellow intern! You got this! I believe in you!<br /><br />Ryanna Luo :)</p>
+    </div>
+  </section>
+
+  <!-- TERMS -->
+  <section id="terms">
+    <h2>Terms & Acronyms</h2>
+    <div class="search-wrap">
+      <input id="search" type="text" placeholder="Search terms..." />
+    </div>
+
+    <div id="terms-list">
+
+      <!-- SLANG & SHORTHAND -->
+      <div class="category-section" data-category="slang">
+        <div class="category-label">Slang &amp; Shorthand</div>
+
+        <div class="term" data-keywords="ack acknowledged slang">
+          <div class="term-header">
+            <span class="term-abbr">ACK</span>
+            <span class="term-name">Acknowledged</span>
+          </div>
+          <div class="term-body">Common in Slack messages. e.g. "ACK" as a quick reply to confirm you've seen or noted something. Funny story, I got super freaked out cuz I thought my manager was mad at me when I received this for the first time 😅</div>
+        </div>
+
+        <div class="term" data-keywords="fft feel free to slang">
+          <div class="term-header">
+            <span class="term-abbr">FFT</span>
+            <span class="term-name">Feel Free To</span>
+          </div>
+          <div class="term-body">Common in Slack messages. e.g. "FFT include me in that discussion."</div>
+        </div>
+
+        <div class="term" data-keywords="sfdc salesforce slang shorthand">
+          <div class="term-header">
+            <span class="term-abbr">SFDC</span>
+            <span class="term-name">Salesforce</span>
+          </div>
+          <div class="term-body">Standard industry shorthand for Salesforce (SalesForce Dot Com). Not Datadog-specific — you'll see it everywhere.</div>
+        </div>
+
+        <div class="term" data-keywords="skip manager manager's manager slang">
+          <div class="term-header">
+            <span class="term-name">Skip Manager</span>
+          </div>
+          <div class="term-body">Your manager's manager.</div>
+        </div>
+
+        <div class="term" data-keywords="byo bring your own slang">
+          <div class="term-header">
+            <span class="term-abbr">BYO</span>
+            <span class="term-name">Bring Your Own</span>
+          </div>
+          <div class="term-body">In context, "bring your own" agent — a customer builds and hosts their own AI agent instead of using Datadog's Bits AI.</div>
+        </div>
+
+      </div>
+
+      <!-- ROLES -->
+      <div class="category-section" data-category="roles">
+        <div class="category-label">Roles</div>
+
+        <div class="term" data-keywords="em engineering manager role">
+          <div class="term-header">
+            <span class="term-abbr">EM</span>
+            <span class="term-name">Engineering Manager</span>
+          </div>
+          <div class="term-body">Manages a team of engineers — responsible for hiring, performance, and team health. Different from a PM who owns the product direction.</div>
+        </div>
+
+        <div class="term" data-keywords="tpm technical program manager role">
+          <div class="term-header">
+            <span class="term-abbr">TPM</span>
+            <span class="term-name">Technical Program Manager</span>
+          </div>
+          <div class="term-body">Coordinates and drives execution across engineering teams, managing timelines, dependencies, and cross-team alignment. Less focused on what to build (that's the PM) and more focused on making sure it gets built on time.</div>
+        </div>
+
+        <div class="term" data-keywords="pmm product marketing manager role">
+          <div class="term-header">
+            <span class="term-abbr">PMM</span>
+            <span class="term-name">Product Marketing Manager</span>
+          </div>
+          <div class="term-body">Handles positioning, messaging, and go-to-market strategy for a product. Bridges product and sales/marketing — often owns launch plans, pricing narratives, and customer-facing content.</div>
+        </div>
+
+      </div>
+
+      <!-- ENGINEERING & CODE -->
+      <div class="category-section" data-category="engineering">
+        <div class="category-label">Engineering &amp; Code</div>
+
+        <div class="term" data-keywords="pr pull request code engineering">
+          <div class="term-header">
+            <span class="term-abbr">PR</span>
+            <span class="term-name">Pull Request</span>
+          </div>
+          <div class="term-body">How engineers propose changes to code. Instead of pushing directly to the main codebase, they open a PR — essentially saying "here are my changes, can someone review before we merge?" Other engineers review, leave comments, and approve before it goes in.</div>
+        </div>
+
+        <div class="term" data-keywords="code review engineering pr">
+          <div class="term-header">
+            <span class="term-name">Code Review</span>
+          </div>
+          <div class="term-body">When another engineer reads through the changes in a PR before they get merged. They're checking for bugs, bad logic, security issues, or messy code. It's a quality control step — most companies require at least one approval before a PR can be merged.</div>
+        </div>
+
+        <div class="term" data-keywords="ff feature flag engineering code">
+          <div class="term-header">
+            <span class="term-abbr">FF</span>
+            <span class="term-name">Feature Flag</span>
+          </div>
+          <div class="term-body">A way to turn a feature on or off without deploying new code. Lets teams roll out features gradually or test them with a subset of users.</div>
+        </div>
+
+        <div class="term" data-keywords="endpoint url api route engineering code">
+          <div class="term-header">
+            <span class="term-name">Endpoint</span>
+          </div>
+          <div class="term-body">A specific URL in an API that does one thing. For example, <code>/logs/search</code> retrieves logs, <code>/metrics/query</code> queries metrics. Each endpoint is like a door into the product — you call it with the right inputs and get a specific output back.</div>
+        </div>
+
+        <div class="term" data-keywords="grpc protocol communication engineering code">
+          <div class="term-header">
+            <span class="term-abbr">gRPC</span>
+          </div>
+          <div class="term-body">A way for services to communicate with each other, similar to a REST API but faster and more efficient. Instead of sending human-readable text (like JSON), it sends compact binary data. Relevant at Datadog because some API calls go over gRPC rather than HTTP, which creates gaps in metering — if you can only meter HTTP traffic, gRPC calls slip through uncounted.</div>
+        </div>
+
+        <div class="term" data-keywords="namespace container grouping engineering code">
+          <div class="term-header">
+            <span class="term-name">Namespace</span>
+          </div>
+          <div class="term-body">A container that groups related things (functions, variables, classes) under a unique name to avoid conflicts. Two teams can both have a function called <code>get_user</code> — as long as they're in different namespaces, they don't clash. Typical syntax: <code>team1.get_user</code> vs <code>team2.get_user</code>.</div>
+        </div>
+
+        <div class="term" data-keywords="yaml file configuration engineering">
+          <div class="term-header">
+            <span class="term-abbr">.yaml</span>
+            <span class="term-name">YAML file</span>
+          </div>
+          <div class="term-body">"YAML Ain't Markup Language" — a recursive acronym (a bit of a programming joke). A file format used for configuration. Human-readable and structured with indentation. Very common in DevOps and infrastructure tooling — you'd see it in Kubernetes configs, CI/CD pipelines, etc.</div>
+        </div>
+
+        <div class="term" data-keywords="openapi yaml json spec documentation engineering">
+          <div class="term-header">
+            <span class="term-name">OpenAPI</span>
+          </div>
+          <div class="term-body">
+            A standard file format (usually YAML or JSON) that formally describes what an API can do — what endpoints exist, what inputs they take, what they return, and how to authenticate. It acts as a blueprint for the API.
+            <div class="sub">At Datadog, engineers write and maintain OpenAPI specs alongside the code. When an endpoint is added or changed, the spec is updated too. Those files feed into the public API docs site, where a tool renders them into the human-readable documentation developers use. The key thing: OpenAPI is machine-readable — tools, AI agents, and client libraries can read it and automatically understand how to interact with the API.</div>
+          </div>
+        </div>
+
+        <div class="term" data-keywords="file types config data source code markup binary log lock schema engineering">
+          <div class="term-header">
+            <span class="term-name">Types of Files</span>
+          </div>
+          <div class="term-body">
+            <ul>
+              <li><strong>Config files</strong> — store settings and parameters for an app (e.g. database URL, port number, feature flags). Examples: .yaml, .json, .toml, .env</li>
+              <li><strong>Data files</strong> — store structured data. Examples: .csv, .json, .xml</li>
+              <li><strong>Source code files</strong> — the actual code. Examples: .py (Python), .js (JavaScript), .go (Go)</li>
+              <li><strong>Markup files</strong> — define structure/formatting for content. Examples: .html (web pages), .md (Markdown)</li>
+              <li><strong>Binary files</strong> — not human-readable, compiled for machines. Examples: .exe, .bin</li>
+              <li><strong>Log files</strong> — records of what an app did, used for debugging. Usually .log or .txt</li>
+              <li><strong>Lock files</strong> — record exact dependency versions so everyone installs the same thing. Examples: package-lock.json, Pipfile.lock</li>
+              <li><strong>Schema files</strong> — define the structure/shape of data. Examples: .sql, .graphql</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- PRODUCT & BUSINESS -->
+      <div class="category-section" data-category="product">
+        <div class="category-label">Product &amp; Business</div>
+
+        <div class="term" data-keywords="sku stock keeping unit product business pricing">
+          <div class="term-header">
+            <span class="term-abbr">SKU</span>
+            <span class="term-name">Stock Keeping Unit</span>
+          </div>
+          <div class="term-body">In retail, a SKU is a unique identifier for a product variant (like different shirt sizes). At Datadog, each product or product group that gets priced differently is a different SKU.</div>
+        </div>
+
+        <div class="term" data-keywords="tco total cost ownership business product pricing">
+          <div class="term-header">
+            <span class="term-abbr">TCO</span>
+            <span class="term-name">Total Cost of Ownership</span>
+          </div>
+          <div class="term-body">The full cost of using something — not just the purchase price but all associated costs (setup, maintenance, operations, etc.). Used in the pricing project to compare the total cost of using Bits AI vs. building your own agent solution.</div>
+        </div>
+
+        <div class="term" data-keywords="product brief prd requirements document product">
+          <div class="term-header">
+            <span class="term-name">Product Brief / PRD</span>
+          </div>
+          <div class="term-body">At Datadog, Product Brief and PRD (Product Requirements Document) are the same thing. The goal is to get the important "why and what" across in an organized manner. Every PM writes them a bit differently — read examples early and develop your own style.</div>
+        </div>
+
+        <div class="term" data-keywords="arbitrage price exploit surface product business">
+          <div class="term-header">
+            <span class="term-name">Arbitrage</span>
+          </div>
+          <div class="term-body">Exploiting a price difference between two things that are effectively the same to get a cheaper deal. In Datadog's pricing context: if MCP calls cost money but API calls were free, customers could get the exact same data by routing through the API instead — same result, zero cost. That's arbitrage. Metering at the API layer prevents this.</div>
+        </div>
+
+        <div class="term" data-keywords="api first ui first mentality product business">
+          <div class="term-header">
+            <span class="term-name">API-first vs UI-first</span>
+          </div>
+          <div class="term-body">
+            <ul>
+              <li><strong>UI-first</strong> — you build the visual interface first and the API just serves that UI. The API becomes tightly coupled to what the UI needs and hard for others to use independently.</li>
+              <li><strong>API-first</strong> — you design the API as the core product. The UI is just one consumer of it, same as any external developer or agent. Everything is built to be programmable from the start.</li>
+            </ul>
+            <div class="sub">At Datadog this matters because customers aren't just clicking dashboards — they're running agents, scripts, and automations that hit the API directly. If the API is an afterthought, those use cases break down.</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- DATADOG TECH -->
+      <div class="category-section" data-category="tech">
+        <div class="category-label">Datadog Tech</div>
+
+        <div class="term" data-keywords="sdk software development kit datadog tech">
+          <div class="term-header">
+            <span class="term-abbr">SDK</span>
+            <span class="term-name">Software Development Kit</span>
+          </div>
+          <div class="term-body">A package of tools and libraries that developers use to interact with a product programmatically. At Datadog, SDKs let customers write code to send data to or pull data from Datadog without making raw API calls themselves.</div>
+        </div>
+
+        <div class="term" data-keywords="api cli mcp surface programmatic datadog tech">
+          <div class="term-header">
+            <span class="term-name">API, CLI, and MCP</span>
+          </div>
+          <div class="term-body">
+            These are different <strong>surfaces</strong> — different ways a user or program can interact with Datadog.
+            <ul>
+              <li><strong>API</strong> (Application Programming Interface) — the direct, raw way to retrieve data from Datadog via HTTP requests. Everything else is built on top of this.</li>
+              <li><strong>CLI</strong> (Command Line Interface) — a tool you run in your terminal. Wraps API calls into human-friendly commands like <code>pup logs list</code>.</li>
+              <li><strong>MCP</strong> (Model Context Protocol) — a newer protocol that lets AI agents interact with Datadog programmatically.</li>
+            </ul>
+            <div class="sub">All three ultimately resolve to the same underlying API call on the backend. Datadog's pricing model meters the underlying API call regardless of which surface triggered it — if one surface were cheaper, customers would just route through that one (arbitrage). Metering at the API layer makes the model arbitrage-proof.</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Made for future API Platforms interns · Datadog · 2026 · <a href="https://docs.google.com/document/d/1FtWGjMTCxTcEr7_O8BmLnWiUjalwBltSqyZOBpNJUMs/edit" target="_blank">View original Google Doc</a>
+</footer>
+
+<script>
+  function checkPassword() {
+    const input = document.getElementById('pw-input').value;
+    const lockScreen = document.getElementById('lock-screen');
+    const card = document.getElementById('lock-card');
+
+    if (input === 'Ddog2026') {
+      lockScreen.classList.add('unlocking');
+      setTimeout(() => { lockScreen.style.display = 'none'; }, 500);
+    } else {
+      document.getElementById('pw-error').style.display = 'block';
+      document.getElementById('pw-input').value = '';
+      card.classList.remove('shake');
+      void card.offsetWidth;
+      card.classList.add('shake');
+    }
+  }
+
+  function showTab(tab) {
+    ['letter', 'terms', 'contact'].forEach(t => {
+      document.getElementById(t).style.display = t === tab ? 'block' : 'none';
+    });
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+  }
+
+  // Start on letter tab
+  document.getElementById('terms').style.display = 'none';
+  document.getElementById('contact').style.display = 'none';
+
+  const search = document.getElementById('search');
+  const categorySections = document.querySelectorAll('.category-section');
+
+  search.addEventListener('input', () => {
+    const q = search.value.toLowerCase().trim();
+
+    if (!q) {
+      document.querySelectorAll('.term').forEach(t => t.classList.remove('hidden'));
+      categorySections.forEach(c => c.classList.remove('hidden'));
+      return;
+    }
+
+    categorySections.forEach(section => {
+      const sectionTerms = section.querySelectorAll('.term');
+      let anyVisible = false;
+
+      sectionTerms.forEach(t => {
+        const keywords = t.dataset.keywords || '';
+        const text = t.textContent.toLowerCase();
+        const match = text.includes(q) || keywords.includes(q);
+        t.classList.toggle('hidden', !match);
+        if (match) anyVisible = true;
+      });
+
+      section.classList.toggle('hidden', !anyVisible);
+    });
+  });
+</script>
+
+</body>
+</html>
