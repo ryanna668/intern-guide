@@ -273,7 +273,7 @@
 
     /* Terms */
     .search-wrap {
-      margin-bottom: 24px;
+      margin-bottom: 16px;
     }
 
     #search {
@@ -288,6 +288,33 @@
     }
 
     #search:focus { border-color: #632ca6; }
+
+    .filter-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .filter-tag {
+      background: #f3eeff;
+      color: #632ca6;
+      border: 1.5px solid #d0c4ee;
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+
+    .filter-tag:hover { background: #e8daf8; border-color: #632ca6; }
+
+    .filter-tag.active {
+      background: #632ca6;
+      color: white;
+      border-color: #632ca6;
+    }
 
     .category-label {
       font-size: 0.78rem;
@@ -467,6 +494,14 @@
     <h2>Terms & Acronyms</h2>
     <div class="search-wrap">
       <input id="search" type="text" placeholder="Search terms..." />
+    </div>
+    <div class="filter-tags">
+      <button class="filter-tag active" onclick="filterCategory('all', this)">All</button>
+      <button class="filter-tag" onclick="filterCategory('slang', this)">Slang &amp; Shorthand</button>
+      <button class="filter-tag" onclick="filterCategory('roles', this)">Roles</button>
+      <button class="filter-tag" onclick="filterCategory('engineering', this)">Engineering &amp; Code</button>
+      <button class="filter-tag" onclick="filterCategory('product', this)">Product &amp; Business</button>
+      <button class="filter-tag" onclick="filterCategory('tech', this)">Datadog Tech</button>
     </div>
 
     <div id="terms-list">
@@ -666,6 +701,15 @@
           <div class="term-body">Exploiting a price difference between two things that are effectively the same to get a cheaper deal. In Datadog's pricing context: if MCP calls cost money but API calls were free, customers could get the exact same data by routing through the API instead — same result, zero cost. That's arbitrage. Metering at the API layer prevents this.</div>
         </div>
 
+        <div class="term" data-keywords="critical path timeline project management deadline product business">
+          <div class="term-header">
+            <span class="term-name">Critical Path</span>
+          </div>
+          <div class="term-body">The sequence of tasks that determines the earliest possible finish date for the whole project. If anything on the critical path is delayed, the entire project is delayed.
+            <div class="sub">Example: in the API Visibility project, metering infrastructure (M1) has to be done before the dashboard (M2) can launch — so M1 is on the critical path. A slip in M1 pushes everything else back.</div>
+          </div>
+        </div>
+
         <div class="term" data-keywords="api first ui first mentality product business">
           <div class="term-header">
             <span class="term-name">API-first vs UI-first</span>
@@ -751,20 +795,29 @@
 
   const search = document.getElementById('search');
   const categorySections = document.querySelectorAll('.category-section');
+  let activeCategory = 'all';
 
-  search.addEventListener('input', () => {
+  function filterCategory(category, btn) {
+    activeCategory = category;
+    document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    search.value = '';
+    applyFilters();
+  }
+
+  function applyFilters() {
     const q = search.value.toLowerCase().trim();
-
-    if (!q) {
-      document.querySelectorAll('.term').forEach(t => t.classList.remove('hidden'));
-      categorySections.forEach(c => c.classList.remove('hidden'));
-      return;
-    }
-
     categorySections.forEach(section => {
+      const cat = section.dataset.category;
+      const catMatch = activeCategory === 'all' || cat === activeCategory;
+      if (!catMatch) { section.classList.add('hidden'); return; }
+      if (!q) {
+        section.classList.remove('hidden');
+        section.querySelectorAll('.term').forEach(t => t.classList.remove('hidden'));
+        return;
+      }
       const sectionTerms = section.querySelectorAll('.term');
       let anyVisible = false;
-
       sectionTerms.forEach(t => {
         const keywords = t.dataset.keywords || '';
         const text = t.textContent.toLowerCase();
@@ -772,10 +825,11 @@
         t.classList.toggle('hidden', !match);
         if (match) anyVisible = true;
       });
-
       section.classList.toggle('hidden', !anyVisible);
     });
-  });
+  }
+
+  search.addEventListener('input', applyFilters);
 </script>
 
 </body>
