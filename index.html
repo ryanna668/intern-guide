@@ -622,6 +622,17 @@
           <div class="term-body">A way for services to communicate with each other, similar to a REST API but faster and more efficient. Instead of sending human-readable text (like JSON), it sends compact binary data. Relevant at Datadog because some API calls go over gRPC rather than HTTP, which creates gaps in metering — if you can only meter HTTP traffic, gRPC calls slip through uncounted.</div>
         </div>
 
+        <div class="term" data-keywords="uuid unique identifier privacy pii gdpr engineering code">
+          <div class="term-header">
+            <span class="term-abbr">UUID</span>
+            <span class="term-name">Universally Unique Identifier</span>
+          </div>
+          <div class="term-body">
+            A randomly generated ID used to uniquely identify something (like a user) without storing any real personal information. Instead of storing a user's email directly in a data system, you store their UUID. The email lives in one place (the user profile), and the UUID just points to it.
+            <div class="sub">This matters for privacy. If a user requests to be forgotten (right to be forgotten / GDPR), you just sever the connection between the UUID and their profile — rather than having to hunt down and delete their email across every data system that ever touched it.</div>
+          </div>
+        </div>
+
         <div class="term" data-keywords="namespace container grouping engineering code">
           <div class="term-header">
             <span class="term-name">Namespace</span>
@@ -692,6 +703,14 @@
             <span class="term-name">Product Brief / PRD</span>
           </div>
           <div class="term-body">At Datadog, Product Brief and PRD (Product Requirements Document) are the same thing. The goal is to get the important "why and what" across in an organized manner. Every PM writes them a bit differently — read examples early and develop your own style.</div>
+        </div>
+
+        <div class="term" data-keywords="pfd product field day event presentation product business">
+          <div class="term-header">
+            <span class="term-abbr">PFD</span>
+            <span class="term-name">Product Field Day</span>
+          </div>
+          <div class="term-body">An internal Datadog event where PMs present their products and roadmaps to the sales and field teams (AEs, SEs, customer success). The goal is to give the people who talk to customers every day the context they need to have informed conversations about what's being built and when.</div>
         </div>
 
         <div class="term" data-keywords="arbitrage price exploit surface product business">

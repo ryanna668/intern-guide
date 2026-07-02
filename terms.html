@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Intern Terms & Acronyms — API Platforms</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐶</text></svg>">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f9f9f9;
+      color: #1a1a1a;
+      line-height: 1.7;
+    }
+
+    header {
+      background: #632ca6;
+      color: white;
+      padding: 48px 32px 36px;
+      text-align: center;
+      animation: fadeInUp 0.5s ease forwards;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      font-size: 0.95rem;
+      opacity: 0.85;
+    }
+
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 48px 24px;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #632ca6;
+      margin-bottom: 24px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #e8e0f5;
+    }
+
+    .search-wrap {
+      margin-bottom: 16px;
+    }
+
+    #search {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid #d0c4ee;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.15s;
+      background: white;
+    }
+
+    #search:focus { border-color: #632ca6; }
+
+    .filter-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .filter-tag {
+      background: #f3eeff;
+      color: #632ca6;
+      border: 1.5px solid #d0c4ee;
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+
+    .filter-tag:hover { background: #e8daf8; border-color: #632ca6; }
+
+    .filter-tag.active {
+      background: #632ca6;
+      color: white;
+      border-color: #632ca6;
+    }
+
+    .category-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #888;
+      margin: 32px 0 12px;
+    }
+
+    .category-label:first-of-type {
+      margin-top: 0;
+    }
+
+    .term {
+      background: white;
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin-bottom: 10px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      transition: box-shadow 0.15s;
+    }
+
+    .term:hover { box-shadow: 0 2px 10px rgba(99,44,166,0.12); }
+
+    .term-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .term-abbr {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #632ca6;
+    }
+
+    .term-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #632ca6;
+    }
+
+    .term-abbr ~ .term-name {
+      font-size: 0.78rem;
+      font-weight: 500;
+      background: #f3eeff;
+      color: #632ca6;
+      padding: 2px 9px;
+      border-radius: 20px;
+    }
+
+    .term-body {
+      font-size: 0.92rem;
+      color: #444;
+    }
+
+    .term-body ul {
+      margin-top: 8px;
+      padding-left: 18px;
+    }
+
+    .term-body ul li {
+      margin-bottom: 4px;
+    }
+
+    .term-body .sub {
+      margin-top: 10px;
+      padding: 10px 14px;
+      background: #f9f9f9;
+      border-radius: 6px;
+      font-size: 0.88rem;
+    }
+
+    .hidden { display: none; }
+    .category-section.hidden { display: none; }
+
+    footer {
+      text-align: center;
+      padding: 32px;
+      font-size: 0.85rem;
+      color: #999;
+      border-top: 1px solid #eee;
+    }
+
+    footer a { color: #632ca6; text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Terms & Acronyms</h1>
+  <p>Platform PM · API Platforms · Datadog · As of July 2026</p>
+</header>
+
+<main>
+  <div class="search-wrap">
+    <input id="search" type="text" placeholder="Search terms..." />
+  </div>
+  <div class="filter-tags">
+    <button class="filter-tag active" onclick="filterCategory('all', this)">All</button>
+    <button class="filter-tag" onclick="filterCategory('slang', this)">Slang &amp; Shorthand</button>
+    <button class="filter-tag" onclick="filterCategory('roles', this)">Roles</button>
+    <button class="filter-tag" onclick="filterCategory('engineering', this)">Engineering &amp; Code</button>
+    <button class="filter-tag" onclick="filterCategory('product', this)">Product &amp; Business</button>
+    <button class="filter-tag" onclick="filterCategory('tech', this)">Datadog Tech</button>
+  </div>
+
+  <div id="terms-list">
+
+    <!-- SLANG & SHORTHAND -->
+    <div class="category-section" data-category="slang">
+      <div class="category-label">Slang &amp; Shorthand</div>
+
+      <div class="term" data-keywords="ack acknowledged slang">
+        <div class="term-header">
+          <span class="term-abbr">ACK</span>
+          <span class="term-name">Acknowledged</span>
+        </div>
+        <div class="term-body">Common in Slack messages. e.g. "ACK" as a quick reply to confirm you've seen or noted something. Funny story, I got super freaked out cuz I thought my manager was mad at me when I received this for the first time 😅</div>
+      </div>
+
+      <div class="term" data-keywords="fft feel free to slang">
+        <div class="term-header">
+          <span class="term-abbr">FFT</span>
+          <span class="term-name">Feel Free To</span>
+        </div>
+        <div class="term-body">Common in Slack messages. e.g. "FFT include me in that discussion."</div>
+      </div>
+
+      <div class="term" data-keywords="sfdc salesforce slang shorthand">
+        <div class="term-header">
+          <span class="term-abbr">SFDC</span>
+          <span class="term-name">Salesforce</span>
+        </div>
+        <div class="term-body">Standard industry shorthand for Salesforce (SalesForce Dot Com). Not Datadog-specific — you'll see it everywhere.</div>
+      </div>
+
+      <div class="term" data-keywords="skip manager manager's manager slang">
+        <div class="term-header">
+          <span class="term-name">Skip Manager</span>
+        </div>
+        <div class="term-body">Your manager's manager.</div>
+      </div>
+
+      <div class="term" data-keywords="byo bring your own slang">
+        <div class="term-header">
+          <span class="term-abbr">BYO</span>
+          <span class="term-name">Bring Your Own</span>
+        </div>
+        <div class="term-body">In context, "bring your own" agent — a customer builds and hosts their own AI agent instead of using Datadog's Bits AI.</div>
+      </div>
+
+    </div>
+
+    <!-- ROLES -->
+    <div class="category-section" data-category="roles">
+      <div class="category-label">Roles</div>
+
+      <div class="term" data-keywords="em engineering manager role">
+        <div class="term-header">
+          <span class="term-abbr">EM</span>
+          <span class="term-name">Engineering Manager</span>
+        </div>
+        <div class="term-body">Manages a team of engineers — responsible for hiring, performance, and team health. Different from a PM who owns the product direction.</div>
+      </div>
+
+      <div class="term" data-keywords="tpm technical program manager role">
+        <div class="term-header">
+          <span class="term-abbr">TPM</span>
+          <span class="term-name">Technical Program Manager</span>
+        </div>
+        <div class="term-body">Coordinates and drives execution across engineering teams, managing timelines, dependencies, and cross-team alignment. Less focused on what to build (that's the PM) and more focused on making sure it gets built on time.</div>
+      </div>
+
+      <div class="term" data-keywords="pmm product marketing manager role">
+        <div class="term-header">
+          <span class="term-abbr">PMM</span>
+          <span class="term-name">Product Marketing Manager</span>
+        </div>
+        <div class="term-body">Handles positioning, messaging, and go-to-market strategy for a product. Bridges product and sales/marketing — often owns launch plans, pricing narratives, and customer-facing content.</div>
+      </div>
+
+    </div>
+
+    <!-- ENGINEERING & CODE -->
+    <div class="category-section" data-category="engineering">
+      <div class="category-label">Engineering &amp; Code</div>
+
+      <div class="term" data-keywords="pr pull request code engineering">
+        <div class="term-header">
+          <span class="term-abbr">PR</span>
+          <span class="term-name">Pull Request</span>
+        </div>
+        <div class="term-body">How engineers propose changes to code. Instead of pushing directly to the main codebase, they open a PR — essentially saying "here are my changes, can someone review before we merge?" Other engineers review, leave comments, and approve before it goes in.</div>
+      </div>
+
+      <div class="term" data-keywords="code review engineering pr">
+        <div class="term-header">
+          <span class="term-name">Code Review</span>
+        </div>
+        <div class="term-body">When another engineer reads through the changes in a PR before they get merged. They're checking for bugs, bad logic, security issues, or messy code. It's a quality control step — most companies require at least one approval before a PR can be merged.</div>
+      </div>
+
+      <div class="term" data-keywords="ff feature flag engineering code">
+        <div class="term-header">
+          <span class="term-abbr">FF</span>
+          <span class="term-name">Feature Flag</span>
+        </div>
+        <div class="term-body">A way to turn a feature on or off without deploying new code. Lets teams roll out features gradually or test them with a subset of users.</div>
+      </div>
+
+      <div class="term" data-keywords="endpoint url api route engineering code">
+        <div class="term-header">
+          <span class="term-name">Endpoint</span>
+        </div>
+        <div class="term-body">A specific URL in an API that does one thing. For example, <code>/logs/search</code> retrieves logs, <code>/metrics/query</code> queries metrics. Each endpoint is like a door into the product — you call it with the right inputs and get a specific output back.</div>
+      </div>
+
+      <div class="term" data-keywords="grpc protocol communication engineering code">
+        <div class="term-header">
+          <span class="term-abbr">gRPC</span>
+        </div>
+        <div class="term-body">A way for services to communicate with each other, similar to a REST API but faster and more efficient. Instead of sending human-readable text (like JSON), it sends compact binary data. Relevant at Datadog because some API calls go over gRPC rather than HTTP, which creates gaps in metering — if you can only meter HTTP traffic, gRPC calls slip through uncounted.</div>
+      </div>
+
+      <div class="term" data-keywords="uuid unique identifier privacy pii gdpr engineering code">
+        <div class="term-header">
+          <span class="term-abbr">UUID</span>
+          <span class="term-name">Universally Unique Identifier</span>
+        </div>
+        <div class="term-body">
+          A randomly generated ID used to uniquely identify something (like a user) without storing any real personal information. Instead of storing a user's email directly in a data system, you store their UUID. The email lives in one place (the user profile), and the UUID just points to it.
+          <div class="sub">This matters for privacy. If a user requests to be forgotten (right to be forgotten / GDPR), you just sever the connection between the UUID and their profile — rather than having to hunt down and delete their email across every data system that ever touched it.</div>
+        </div>
+      </div>
+
+      <div class="term" data-keywords="namespace container grouping engineering code">
+        <div class="term-header">
+          <span class="term-name">Namespace</span>
+        </div>
+        <div class="term-body">A container that groups related things (functions, variables, classes) under a unique name to avoid conflicts. Two teams can both have a function called <code>get_user</code> — as long as they're in different namespaces, they don't clash. Typical syntax: <code>team1.get_user</code> vs <code>team2.get_user</code>.</div>
+      </div>
+
+      <div class="term" data-keywords="yaml file configuration engineering">
+        <div class="term-header">
+          <span class="term-abbr">.yaml</span>
+          <span class="term-name">YAML file</span>
+        </div>
+        <div class="term-body">"YAML Ain't Markup Language" — a recursive acronym (a bit of a programming joke). A file format used for configuration. Human-readable and structured with indentation. Very common in DevOps and infrastructure tooling — you'd see it in Kubernetes configs, CI/CD pipelines, etc.</div>
+      </div>
+
+      <div class="term" data-keywords="openapi yaml json spec documentation engineering">
+        <div class="term-header">
+          <span class="term-name">OpenAPI</span>
+        </div>
+        <div class="term-body">
+          A standard file format (usually YAML or JSON) that formally describes what an API can do — what endpoints exist, what inputs they take, what they return, and how to authenticate. It acts as a blueprint for the API.
+          <div class="sub">At Datadog, engineers write and maintain OpenAPI specs alongside the code. When an endpoint is added or changed, the spec is updated too. Those files feed into the public API docs site, where a tool renders them into the human-readable documentation developers use. The key thing: OpenAPI is machine-readable — tools, AI agents, and client libraries can read it and automatically understand how to interact with the API.</div>
+        </div>
+      </div>
+
+      <div class="term" data-keywords="file types config data source code markup binary log lock schema engineering">
+        <div class="term-header">
+          <span class="term-name">Types of Files</span>
+        </div>
+        <div class="term-body">
+          <ul>
+            <li><strong>Config files</strong> — store settings and parameters for an app (e.g. database URL, port number, feature flags). Examples: .yaml, .json, .toml, .env</li>
+            <li><strong>Data files</strong> — store structured data. Examples: .csv, .json, .xml</li>
+            <li><strong>Source code files</strong> — the actual code. Examples: .py (Python), .js (JavaScript), .go (Go)</li>
+            <li><strong>Markup files</strong> — define structure/formatting for content. Examples: .html (web pages), .md (Markdown)</li>
+            <li><strong>Binary files</strong> — not human-readable, compiled for machines. Examples: .exe, .bin</li>
+            <li><strong>Log files</strong> — records of what an app did, used for debugging. Usually .log or .txt</li>
+            <li><strong>Lock files</strong> — record exact dependency versions so everyone installs the same thing. Examples: package-lock.json, Pipfile.lock</li>
+            <li><strong>Schema files</strong> — define the structure/shape of data. Examples: .sql, .graphql</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- PRODUCT & BUSINESS -->
+    <div class="category-section" data-category="product">
+      <div class="category-label">Product &amp; Business</div>
+
+      <div class="term" data-keywords="sku stock keeping unit product business pricing">
+        <div class="term-header">
+          <span class="term-abbr">SKU</span>
+          <span class="term-name">Stock Keeping Unit</span>
+        </div>
+        <div class="term-body">In retail, a SKU is a unique identifier for a product variant (like different shirt sizes). At Datadog, each product or product group that gets priced differently is a different SKU.</div>
+      </div>
+
+      <div class="term" data-keywords="tco total cost ownership business product pricing">
+        <div class="term-header">
+          <span class="term-abbr">TCO</span>
+          <span class="term-name">Total Cost of Ownership</span>
+        </div>
+        <div class="term-body">The full cost of using something — not just the purchase price but all associated costs (setup, maintenance, operations, etc.). Used in the pricing project to compare the total cost of using Bits AI vs. building your own agent solution.</div>
+      </div>
+
+      <div class="term" data-keywords="product brief prd requirements document product">
+        <div class="term-header">
+          <span class="term-name">Product Brief / PRD</span>
+        </div>
+        <div class="term-body">At Datadog, Product Brief and PRD (Product Requirements Document) are the same thing. The goal is to get the important "why and what" across in an organized manner. Every PM writes them a bit differently — read examples early and develop your own style.</div>
+      </div>
+
+      <div class="term" data-keywords="pfd product field day event presentation product business">
+        <div class="term-header">
+          <span class="term-abbr">PFD</span>
+          <span class="term-name">Product Field Day</span>
+        </div>
+        <div class="term-body">An internal Datadog event where PMs present their products and roadmaps to the sales and field teams (AEs, SEs, customer success). The goal is to give the people who talk to customers every day the context they need to have informed conversations about what's being built and when.</div>
+      </div>
+
+      <div class="term" data-keywords="arbitrage price exploit surface product business">
+        <div class="term-header">
+          <span class="term-name">Arbitrage</span>
+        </div>
+        <div class="term-body">Exploiting a price difference between two things that are effectively the same to get a cheaper deal. In Datadog's pricing context: if MCP calls cost money but API calls were free, customers could get the exact same data by routing through the API instead — same result, zero cost. That's arbitrage. Metering at the API layer prevents this.</div>
+      </div>
+
+      <div class="term" data-keywords="critical path timeline project management deadline product business">
+        <div class="term-header">
+          <span class="term-name">Critical Path</span>
+        </div>
+        <div class="term-body">The sequence of tasks that determines the earliest possible finish date for the whole project. If anything on the critical path is delayed, the entire project is delayed.
+          <div class="sub">Example: in the API Visibility project, metering infrastructure (M1) has to be done before the dashboard (M2) can launch — so M1 is on the critical path. A slip in M1 pushes everything else back.</div>
+        </div>
+      </div>
+
+      <div class="term" data-keywords="api first ui first mentality product business">
+        <div class="term-header">
+          <span class="term-name">API-first vs UI-first</span>
+        </div>
+        <div class="term-body">
+          <ul>
+            <li><strong>UI-first</strong> — you build the visual interface first and the API just serves that UI. The API becomes tightly coupled to what the UI needs and hard for others to use independently.</li>
+            <li><strong>API-first</strong> — you design the API as the core product. The UI is just one consumer of it, same as any external developer or agent. Everything is built to be programmable from the start.</li>
+          </ul>
+          <div class="sub">At Datadog this matters because customers aren't just clicking dashboards — they're running agents, scripts, and automations that hit the API directly. If the API is an afterthought, those use cases break down.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- DATADOG TECH -->
+    <div class="category-section" data-category="tech">
+      <div class="category-label">Datadog Tech</div>
+
+      <div class="term" data-keywords="sdk software development kit datadog tech">
+        <div class="term-header">
+          <span class="term-abbr">SDK</span>
+          <span class="term-name">Software Development Kit</span>
+        </div>
+        <div class="term-body">A package of tools and libraries that developers use to interact with a product programmatically. At Datadog, SDKs let customers write code to send data to or pull data from Datadog without making raw API calls themselves.</div>
+      </div>
+
+      <div class="term" data-keywords="api cli mcp surface programmatic datadog tech">
+        <div class="term-header">
+          <span class="term-name">API, CLI, and MCP</span>
+        </div>
+        <div class="term-body">
+          These are different <strong>surfaces</strong> — different ways a user or program can interact with Datadog.
+          <ul>
+            <li><strong>API</strong> (Application Programming Interface) — the direct, raw way to retrieve data from Datadog via HTTP requests. Everything else is built on top of this.</li>
+            <li><strong>CLI</strong> (Command Line Interface) — a tool you run in your terminal. Wraps API calls into human-friendly commands like <code>pup logs list</code>.</li>
+            <li><strong>MCP</strong> (Model Context Protocol) — a newer protocol that lets AI agents interact with Datadog programmatically.</li>
+          </ul>
+          <div class="sub">All three ultimately resolve to the same underlying API call on the backend. Datadog's pricing model meters the underlying API call regardless of which surface triggered it — if one surface were cheaper, customers would just route through that one (arbitrage). Metering at the API layer makes the model arbitrage-proof.</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  Made for future API Platforms interns · Datadog · 2026
+</footer>
+
+<script>
+  const search = document.getElementById('search');
+  const categorySections = document.querySelectorAll('.category-section');
+  let activeCategory = 'all';
+
+  function filterCategory(category, btn) {
+    activeCategory = category;
+    document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    search.value = '';
+    applyFilters();
+  }
+
+  function applyFilters() {
+    const q = search.value.toLowerCase().trim();
+    categorySections.forEach(section => {
+      const cat = section.dataset.category;
+      const catMatch = activeCategory === 'all' || cat === activeCategory;
+      if (!catMatch) { section.classList.add('hidden'); return; }
+      if (!q) {
+        section.classList.remove('hidden');
+        section.querySelectorAll('.term').forEach(t => t.classList.remove('hidden'));
+        return;
+      }
+      const sectionTerms = section.querySelectorAll('.term');
+      let anyVisible = false;
+      sectionTerms.forEach(t => {
+        const keywords = t.dataset.keywords || '';
+        const text = t.textContent.toLowerCase();
+        const match = text.includes(q) || keywords.includes(q);
+        t.classList.toggle('hidden', !match);
+        if (match) anyVisible = true;
+      });
+      section.classList.toggle('hidden', !anyVisible);
+    });
+  }
+
+  search.addEventListener('input', applyFilters);
+</script>
+
+</body>
+</html>
